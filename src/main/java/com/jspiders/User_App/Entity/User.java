@@ -2,10 +2,12 @@ package com.jspiders.User_App.Entity;
 
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -34,7 +36,7 @@ private int userId;
 
 @Pattern(regexp="[ A-Za-z]*a4")
 private String userName;
-
+ 
 @Email(regexp="")
 private String userEmail;
 
@@ -51,4 +53,7 @@ private String address;
 @Max(value=100)
 @Min(value=1)
 private int age;
+
+@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+private Aadhar aadhar;
 }

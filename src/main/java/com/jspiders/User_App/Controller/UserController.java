@@ -25,14 +25,6 @@ import com.jspiders.User_App.Service.UserService;
 import jakarta.validation.Valid;
 
 
-
-//Documentation
-/**
- * #@author  
- */
-
-
-
 @RestController
 @RequestMapping("/user")
 public class UserController {
