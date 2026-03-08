@@ -1,4 +1,4 @@
-package com.jspiders.User_App;
+ package com.jspiders.User_App;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

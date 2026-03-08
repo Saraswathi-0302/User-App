@@ -39,38 +39,38 @@ public class UserController {
 	}
 
 	@GetMapping("/getUser")
-	public ResponseEntity<?> getUserById(@RequestParam int userId) {
-		ResponseStructure<Optional<User>> structure = userService.getUserById(userId);
-		return new ResponseEntity<>(structure, HttpStatus.FOUND);
+	public ResponseEntity<ResponseStructure<User>> getUserById(@RequestParam int userId) {
+		ResponseStructure<User> structure = userService.getUserById(userId);
+		return new ResponseEntity<>(structure, HttpStatus.OK);
 	}
 
 	@GetMapping("/getAllUser")
-	public ResponseEntity<?> getAllUser() {
+	public ResponseEntity<ResponseStructure<List<User>>> getAllUser() {
 		ResponseStructure<List<User>> structure = userService.getAllUser();
-		return new ResponseEntity<>(structure, HttpStatus.FOUND);
+		return new ResponseEntity<>(structure, HttpStatus.OK);
 	}
 
 	@PutMapping("/update") // localhost:8080/user/update?userId=id
-	public ResponseEntity<?> updateUser(@RequestBody User user, @RequestParam int userId) {
+	public ResponseEntity<ResponseStructure<User>> updateUser(@RequestBody User user, @RequestParam int userId) {
 		ResponseStructure<User> structure = userService.updateUser(user, userId);
 		return new ResponseEntity<>(structure, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/delete") // localhost:8080/user/delete?userId=id
-	public ResponseEntity<?> deleteUser(@RequestParam int userId) {
+	public ResponseEntity<ResponseStructure<String>> deleteUser(@RequestParam int userId) {
 		ResponseStructure<String> structure = userService.deleteUser(userId);
 		return new ResponseEntity<>(structure, HttpStatus.OK);
 	}
 
 	@GetMapping("/getUserPage") // localhost:8080/user/getUserPage?pageNo=2
-	public ResponseEntity<?> getUserByPage(@RequestParam int pageNo) {
+	public ResponseEntity<ResponseStructure<Page<User>>> getUserByPage(@RequestParam int pageNo) {
 		ResponseStructure<Page<User>> structure = userService.getUserByPage(pageNo);
-		return new ResponseEntity<>(structure, HttpStatus.FOUND);
+		return new ResponseEntity<>(structure, HttpStatus.OK);
 	}
 
 	@PostMapping("/login") // localhost:8080/user/login
-	public ResponseEntity<?> login(@RequestBody User user) {
-		ResponseStructure<Optional<User>> structure = userService.login(user.getUserEmail(), user.getUserPassword());
+	public ResponseEntity<ResponseStructure<User>> login(@RequestBody User user) {
+		ResponseStructure<User> structure = userService.login(user.getUserEmail(), user.getUserPassword());
 		return new ResponseEntity<>(structure, HttpStatus.OK);
 	}
 

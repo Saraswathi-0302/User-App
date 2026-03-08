@@ -13,10 +13,14 @@ public class Aadhardao
 	@Autowired
 	private AadharRepository aadharRepository;
 
-  public Aadhar registerAadhar(Aadhar aadhar, int userId)
+  public Aadhar registerAadhar(Aadhar aadhar)
 	{
-		Aadhar save=aadharRepository.save(aadhar);
-		return save;
+		return aadharRepository.save(aadhar);
+		
 	}
+  public boolean existsByAadharNumber(long aadharNumber)
+  {
+      return aadharRepository.existsByAadharNumber(aadharNumber);
+  }
 
 }

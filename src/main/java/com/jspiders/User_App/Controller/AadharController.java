@@ -12,18 +12,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jspiders.User_App.Entity.Aadhar;
 import com.jspiders.User_App.Service.AadharService;
 
+import jakarta.validation.Valid;
 
 
 @RestController
 @RequestMapping("/aadhar")
 public class AadharController 
 {
-@Autowired
-private AadharService aadharservice;
+	@Autowired
+	private AadharService aadharservice;
 
-@PostMapping("/register")
-public ResponseEntity<?> registeraadhar(@RequestBody Aadhar aadhar, @RequestParam int userId)
-{
-	return  new ResponseEntity<Aadhar>(aadharservice.registerAadhar(aadhar, userId),HttpStatus.CREATED);
-}
+	@PostMapping("/register")
+	public ResponseEntity<Aadhar> registeraadhar(@Valid @RequestBody Aadhar aadhar, @RequestParam int userId)
+	{
+		Aadhar savedAadhar = aadharservice.registerAadhar(aadhar, userId);
+		return  new ResponseEntity<Aadhar>(savedAadhar,HttpStatus.CREATED);
+	}
 }

@@ -6,5 +6,5 @@ import com.jspiders.User_App.Entity.Aadhar;
 
 public interface AadharRepository extends JpaRepository<Aadhar, Integer>
 {
-
+  boolean existsByAadharNumber(long aadharNumber);
 }

@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+
 import org.springframework.stereotype.Service;
 
 import com.jspiders.User_App.Dao.Userdao;
@@ -24,8 +26,19 @@ public class UserService {
 	@Autowired
 	private Userdao userDao;
 
-	public ResponseStructure<User> registerUser(User user) {
+	//Password Encoder 
+	@Autowired
+	private PasswordEncoder passwordEncoder; //<-- Injected Bean from SecurityConfig
+
+
+	public ResponseStructure<User> registerUser(User user) 
+	{
+		//Encode password before saving
+		user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+
+		//Save user
 		User user2 = userDao.registerUser(user);
+
 		ResponseStructure<User> structure = new ResponseStructure<User>();
 		structure.setData(user2);
 		structure.setTimeStamp(LocalDateTime.now());
@@ -34,31 +47,39 @@ public class UserService {
 		return structure;
 	}
 
-	public ResponseStructure<Optional<User>> getUserById(int userId) {
+	public ResponseStructure<User> getUserById(int userId) {
 		Optional<User> optional = userDao.getUserById(userId);
 		if (optional.isPresent()) {
-			ResponseStructure<Optional<User>> structure = new ResponseStructure<Optional<User>>();
-			structure.setData(optional);
+			ResponseStructure<User> structure = new ResponseStructure<>();
+			structure.setData(optional.get());
 			structure.setTimeStamp(LocalDateTime.now());
 			structure.setMessage("User Record found !!");
-			structure.setStatusCode(302);
+			structure.setStatusCode(200);
 			return structure;
-		} else {
+		} 
+		else
+		{
 			throw new IdNotFoundException("Invalid Id");
 		}
 	}
 
-	public ResponseStructure<List<User>> getAllUser() {
+	public ResponseStructure<List<User>> getAllUser() 
+	{
 		List<User> allUser = userDao.getAllUser();
 		ResponseStructure<List<User>> structure = new ResponseStructure<List<User>>();
 		structure.setData(allUser);
 		structure.setTimeStamp(LocalDateTime.now());
 		structure.setMessage("All User Record found !!");
-		structure.setStatusCode(302);
+		structure.setStatusCode(200);
 		return structure;
 	}
 
-	public ResponseStructure<User> updateUser(User user, int userId) {
+	public ResponseStructure<User> updateUser(User user, int userId)
+	{
+		if(user.getUserPassword() !=null && !user.getUserPassword().isEmpty())
+		{
+			user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+		}
 		User user2 = userDao.updateUser(user, userId);
 		ResponseStructure<User> structure = new ResponseStructure<User>();
 		structure.setData(user2);
@@ -78,28 +99,40 @@ public class UserService {
 		return structure;
 	}
 
-	public ResponseStructure<Page<User>> getUserByPage(int pageNo) {
+	public ResponseStructure<Page<User>> getUserByPage(int pageNo)
+	{
 		Page<User> page = userDao.getUserByPage(pageNo);
 		ResponseStructure<Page<User>> structure = new ResponseStructure<Page<User>>();
 		structure.setData(page);
 		structure.setTimeStamp(LocalDateTime.now());
 		structure.setMessage("User Record found !!");
-		structure.setStatusCode(302);
+		structure.setStatusCode(200);
 		return structure;
 	}
 
-	public ResponseStructure<Optional<User>> login(String email, String password) {
-		Optional<User> optional = userDao.login(email);
+	public ResponseStructure<User> login(String email, String password)
+	{
+
+		Optional<User> optional = userDao.login(email);//fetch user by email
+
 		if (optional.isPresent()) {
-//			String userEmail = optional.get().getUserEmail();//db email
-			String userPassword = optional.get().getUserPassword();// db pass
-			if (password.equals(userPassword)) {
-				ResponseStructure<Optional<User>> structure = new ResponseStructure<Optional<User>>();
-				structure.setData(optional);
+
+			User user=optional.get();
+
+			String encodedPassword= user.getUserPassword();
+
+			//Use PasswordEncoder.matches() to check password
+			if (passwordEncoder.matches(password,encodedPassword)) {
+				ResponseStructure<User> structure = new ResponseStructure<>();
+				structure.setData(user);
 				structure.setTimeStamp(LocalDateTime.now());
 				structure.setMessage("User login success Welcome !!");
 				structure.setStatusCode(200);
 				return structure;
+			}
+			else
+			{
+				throw new EmailNotFound("Invalid Credentials");
 			}
 		}
 		throw new EmailNotFound("Invalid Email try again!!");
@@ -148,7 +181,7 @@ public class UserService {
 		structure.setMessage("All User Record Found Successfully !!!");
 		structure.setStatusCode(302);
 		return structure;
-		
+
 	}
 
 	public ResponseStructure<User> updateUser(User user,int userId) {
@@ -159,7 +192,7 @@ public class UserService {
 		structure.setMessage("User Record Updated Successfully !!!");
 		structure.setStatusCode(200);
 		return structure;
-		
+
 	}
 
 	public ResponseStructure<String> deleteUser(int userId) {
@@ -170,10 +203,10 @@ public class UserService {
 		structure.setMessage("User Record Deleted Successfully !!!");
 		structure.setStatusCode(200);
 		return structure;
-		
+
 	}
 
-	
+
 	public ResponseStructure<String> deleteAllUser() {
 	    String message = userDao.deleteAllUser();
 	    ResponseStructure<String> structure = new ResponseStructure<>();
@@ -212,7 +245,7 @@ public ResponseStructure<Optional<User>>login(String email,String password)
 			return structure;
 		}
 	}
-	
+
 	throw new EmailNotFound("Invalid Email Id, Please Try Again");
 }
 
