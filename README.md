@@ -89,12 +89,12 @@ Controller → Service → DAO → Repository → Database
 ```
 POST /user/register
 {
-  "userName": "Saraswathi M",
-  "userEmail": "saraswathi@example.com",
+  "userName": "John Doe",
+  "userEmail": "johndoe@example.com",
   "userPassword": "password123",
-  "userContact": "9894079837",
+  "userContact": "98XXXXXXXX",
   "address": "Tamil Nadu, India",
-  "age": 22
+  "age": 25
 }
 ```
 
