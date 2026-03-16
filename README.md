@@ -1,99 +1,131 @@
-# User Management System 
+# User Management System
 
-This project is a **Spring Boot REST API application** developed to manage **user information and Aadhaar details**.
-
-The system allows users to **register, retrieve, update, and delete user records** while maintaining a **One-to-One relationship between User and Aadhaar entities**. The application also implements **password security using Spring Security and BCrypt encryption**.
-
-The backend is built using **Java, Spring Boot, Hibernate (JPA), and MySQL**, and follows a **layered architecture** for better code organization and maintainability.
+A production-style User Management REST API with secure authentication, Aadhar entity mapping, and input validation — built with Spring Boot and Spring Security.
 
 ---
 
-## Technologies Used
+## Tech Stack
 
-- Java  
-- Spring Boot  
-- Spring Security  
-- Hibernate (JPA)  
-- MySQL  
-- Maven  
-- Postman  
-- Git & GitHub  
+| Layer | Technology |
+|-------|-----------|
+| Language | Java (Core Java, Advanced Java, J2EE) |
+| Framework | Spring Boot, Spring MVC, Spring Security |
+| ORM | Hibernate (JPA), Spring Data JPA |
+| Database | MySQL |
+| Security | BCrypt Password Hashing |
+| Validation | Bean Validation (@Valid) |
+| Build Tool | Maven |
+| API Testing | Postman |
+| Version Control | Git, GitHub |
 
 ---
 
 ## Features
 
-- User registration  
-- Retrieve all users  
-- Update user details  
-- Delete user records  
-- Add Aadhaar details for users  
-- One-to-One mapping between **User and Aadhaar**  
-- Password encryption using **BCrypt**  
-- REST API development using **Spring Boot**  
-- Global exception handling  
-- Custom API response structure  
+- User registration with BCrypt encrypted password
+- Secure login with credential validation
+- Get user by ID with custom exception handling
+- Get all users
+- Update user details
+- Delete user
+- Paginated user retrieval
+- Aadhar card — OneToOne entity mapping with User
+- Input validation with meaningful error messages
+- Password never exposed in API response (@JsonProperty WRITE_ONLY)
+- Global exception handling
+
+---
+
+## Security Highlights
+
+| Feature | Implementation |
+|---------|---------------|
+| Password hashing | BCryptPasswordEncoder |
+| Password protection | @JsonProperty(WRITE_ONLY) |
+| Input validation | @Valid, @NotBlank, @Email, @Pattern |
+| Exception handling | GlobalExceptionController (@RestControllerAdvice) |
 
 ---
 
 ## Project Architecture
 
-The project follows a **layered architecture**:
-
+```
 Controller → Service → DAO → Repository → Database
+```
 
-This architecture separates **API handling, business logic, and database operations**, making the application easier to maintain and extend.
+| Layer | Responsibility |
+|-------|---------------|
+| Controller | Handles HTTP requests and responses |
+| Service | Business logic + password encoding |
+| DAO | Data access operations |
+| Repository | JPA repository interface |
 
 ---
 
 ## API Endpoints
 
-**POST /user/register** – Register new user  
+### User APIs
 
-**GET /user/getallusers** – Retrieve all users  
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/user/register` | Register a new user |
+| GET | `/user/getUser?userId=` | Get user by ID |
+| GET | `/user/getAllUser` | Get all users |
+| PUT | `/user/update?userId=` | Update user |
+| DELETE | `/user/delete?userId=` | Delete user |
+| GET | `/user/getUserPage?pageNo=` | Get users with pagination |
+| POST | `/user/login` | User login |
 
-**PUT /user/updateuser** – Update user details  
+### Aadhar APIs
 
-**DELETE /user/deleteuser** – Delete user  
-
-**POST /aadhar/register** – Add Aadhaar details  
-
-**GET /aadhar/getbyid** – Get Aadhaar details  
-
----
-
-## Security
-
-Spring Security is implemented to protect user credentials.
-
-- Passwords are encrypted using **BCrypt**
-- Plain text passwords are never stored in the database
-- Password verification is handled securely during authentication
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/aadhar/register?userId=` | Link Aadhar to user |
 
 ---
 
-## Database
+## Sample Request — Register User
 
-The application uses **MySQL** to store user and Aadhaar information.
-
-- **Hibernate (JPA)** is used for Object Relational Mapping
-- A **One-to-One relationship** is implemented between **User and Aadhaar** entities
+```
+POST /user/register
+{
+  "userName": "Saraswathi M",
+  "userEmail": "saraswathi@example.com",
+  "userPassword": "password123",
+  "userContact": "9894079837",
+  "address": "Tamil Nadu, India",
+  "age": 22
+}
+```
 
 ---
 
-## Tools Used
+## How to Run
 
-- **Postman** – API testing  
-- **Maven** – Dependency management  
-- **GitHub** – Version control and repository hosting  
+1. Clone the repository
+```
+git clone https://github.com/Saraswathi-0302/User-App.git
+```
+
+2. Configure MySQL in `src/main/resources/application.properties`
+```
+spring.datasource.url=jdbc:mysql://localhost:3306/userapp
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+spring.jpa.hibernate.ddl-auto=update
+```
+
+3. Run the application
+```
+mvn spring-boot:run
+```
+
+4. Test APIs using Postman at http://localhost:8080
 
 ---
 
 ## Developer
 
-**Saraswathi M**  
-Java Backend Developer  
-
-GitHub: https://github.com/Saraswathi-0302  
-
-LinkedIn: https://www.linkedin.com/in/saraswathim02
+**Saraswathi M** — Java Backend Developer
+- LinkedIn: https://www.linkedin.com/in/saraswathim02
+- GitHub: https://github.com/Saraswathi-0302
